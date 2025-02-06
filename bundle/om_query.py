@@ -12,6 +12,12 @@ LATITUDE = os.getenv("LATITUDE")
 LONGITUDE = os.getenv("LONGITUDE")
 TIMEZONE = os.getenv("TIMEZONE")
 TIMEZONE_OFFSET = os.getenv("TIMEZONE_OFFSET")
+MEASUREMENT_UNITS = os.getenv("MEASUREMENT_UNITS")
+
+if MEASUREMENT_UNITS == "METRIC":
+    UNITS = ["mm", "celsius", "kmh"]
+else:
+    UNITS = ["inch", "fahrenheit", "mph"]
 
 # Open-Meteo Free API
 DATA_SOURCE = "http://api.open-meteo.com/v1/forecast?"
@@ -34,8 +40,8 @@ DATA_SOURCE += "wind_speed_10m,"
 DATA_SOURCE += "wind_direction_10m,"
 DATA_SOURCE += "wind_gusts_10m"
 DATA_SOURCE += "&daily=sunrise,sunset"
-DATA_SOURCE += "&temperature_unit=fahrenheit"
-DATA_SOURCE += "&wind_speed_unit=mph"
-# DATA_SOURCE += "&precipitation_unit=inch"
+DATA_SOURCE += "&temperature_unit=" + UNITS[1]
+DATA_SOURCE += "&wind_speed_unit=" + UNITS[2]
+# DATA_SOURCE += "&precipitation_unit=" + UNITS[0]
 DATA_SOURCE += "&timeformat=unixtime"
 DATA_SOURCE += "&timezone=" + TIMEZONE
