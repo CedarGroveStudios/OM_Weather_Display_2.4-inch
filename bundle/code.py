@@ -33,7 +33,7 @@ from wmo_to_map_icon import wmo_to_map_icon
 from om_query import DATA_SOURCE
 
 # Weather Display Parameters
-SAMPLE_INTERVAL = 300  # Check conditions (sec): typically 1200
+SAMPLE_INTERVAL = 600  # Check conditions (sec): typically 600 to 1200
 NTP_INTERVAL = 3600  # Update local time from NTP server (sec): typically 3600
 BRIGHTNESS = 0.75  # TFT and NeoPixel brightness setting
 LIGHT_SENSOR = False  # True when ALS-PT19 sensor is connected to board.A3
@@ -93,9 +93,10 @@ light_sensor = analogio.AnalogIn(board.A3)
 
 
 def adjust_brightness():
-    """Acquire the ALS-PT19 light sensor value and gradually adjust
-    display brightness. Full-scale raw light sensor value (65535)
-    is approximately 1100 Lux."""
+    """Acquire the ALS-PT19 light sensor value and gradually adjust display
+    brightness based on ambient light. The display brightness ranges from 0.05
+    to BRIGHTNESS when the ambient light level falls between 5 to 200 lux.
+    Full-scale raw light sensor value (65535) is approximately 1500 Lux."""
     global old_brightness
     if not LIGHT_SENSOR:
         return
@@ -103,7 +104,7 @@ def adjust_brightness():
     for i in range(2000):
         raw = raw + light_sensor.value
     target_brightness = round(
-        map_range(raw / 2000 / 65535 * 1100, 11, 20, 0.01, BRIGHTNESS), 3
+        map_range(raw / 2000 / 65535 * 1500, 5, 200, 0.05, BRIGHTNESS), 3
     )
     new_brightness = round(
         old_brightness + ((target_brightness - old_brightness) / 5), 3
