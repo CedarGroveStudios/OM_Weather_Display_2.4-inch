@@ -29,14 +29,16 @@ from adafruit_display_text.label import Label
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_shapes.roundrect import RoundRect
 
+from cedargrove_dst_adjuster import _detect_dst as is_dst
+
 from wmo_to_map_icon import wmo_to_map_icon
 from om_query import DATA_SOURCE
 
 # Weather Display Parameters
 SAMPLE_INTERVAL = 600  # Check conditions (sec): typically 600 to 1200
 NTP_INTERVAL = 3600  # Update local time from NTP server (sec): typically 3600
-BRIGHTNESS = 0.75  # TFT and NeoPixel brightness setting
-LIGHT_SENSOR = False  # True when ALS-PT19 sensor is connected to board.A3
+BRIGHTNESS = 0.95  # TFT and NeoPixel brightness setting
+LIGHT_SENSOR = True  # True when ALS-PT19 sensor is connected to board.A3
 
 # fmt: off
 # Month and weekday lookup tables
@@ -89,6 +91,7 @@ pixel.brightness = BRIGHTNESS
 # Instantiate the ALS-PT19 light sensor
 light_sensor = analogio.AnalogIn(board.A3)
 
+
 # ### Helper Methods ###
 
 
@@ -104,7 +107,7 @@ def adjust_brightness():
     for i in range(2000):
         raw = raw + light_sensor.value
     target_brightness = round(
-        map_range(raw / 2000 / 65535 * 1500, 5, 200, 0.05, BRIGHTNESS), 3
+        map_range(raw / 2000 / 65535 * 1500, 5, 200, 0.07, BRIGHTNESS), 3
     )
     new_brightness = round(
         old_brightness + ((target_brightness - old_brightness) / 5), 3
@@ -176,6 +179,11 @@ def get_local_time():
         rtc.RTC().datetime = ntp.datetime
     except Exception as time_err:
         print(f"  ERROR: Fetch local time: {time_err}")
+
+    # DST adjustment
+    if is_dst(time.localtime()):
+        rtc.RTC().datetime = time.localtime(time.time() + 3600)
+
     alert("  READY")
     pixel[0] = NORMAL
 
