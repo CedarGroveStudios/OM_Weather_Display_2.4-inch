@@ -37,7 +37,7 @@ from om_query import DATA_SOURCE
 SAMPLE_INTERVAL = 600  # Check conditions (sec): typically 600 to 1200
 NTP_INTERVAL = 3600  # Update local time from NTP server (sec): typically 3600
 BRIGHTNESS = 0.95  # TFT and NeoPixel brightness setting
-LIGHT_SENSOR = True  # True when ALS-PT19 sensor is connected to board.A3
+LIGHT_SENSOR = False  # True when ALS-PT19 sensor is connected to board.A3
 
 # fmt: off
 # Month and weekday lookup tables
