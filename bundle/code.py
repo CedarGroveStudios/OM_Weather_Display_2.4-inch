@@ -107,7 +107,7 @@ def adjust_brightness():
     for i in range(2000):
         raw = raw + light_sensor.value
     target_brightness = round(
-        map_range(raw / 2000 / 65535 * 1500, 5, 200, 0.07, BRIGHTNESS), 3
+        map_range(raw / 2000 / 65535 * 1500, 5, 200, 0.1, BRIGHTNESS), 3
     )
     new_brightness = round(
         old_brightness + ((target_brightness - old_brightness) / 5), 3
