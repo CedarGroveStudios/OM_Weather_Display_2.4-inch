@@ -27,7 +27,6 @@ import adafruit_requests
 import adafruit_ili9341
 from adafruit_display_text.label import Label
 from adafruit_bitmap_font import bitmap_font
-from adafruit_display_shapes.roundrect import RoundRect
 
 from cedargrove_dst_adjuster import _detect_dst as is_dst
 
@@ -90,7 +89,6 @@ pixel.brightness = BRIGHTNESS
 
 # Instantiate the ALS-PT19 light sensor
 light_sensor = analogio.AnalogIn(board.A3)
-
 
 # ### Helper Methods ###
 
@@ -192,10 +190,10 @@ def toggle_clock_tick():
     """Toggle the clock tick indicator and red LED."""
     global clock_tick
     if clock_tick:
-        clock_tick_mask.fill = RED
+        clock_watch.background_color = RED
         led.value = True
     else:
-        clock_tick_mask.fill = None
+        clock_watch.background_color = None
         led.value = False
     clock_tick = not clock_tick
 
@@ -420,9 +418,12 @@ humidity.anchored_position = (display.width - 10, 210)
 humidity.color = PURPLE
 image_group.append(humidity)
 
-# Define the clock tick indicator shap
-clock_tick_mask = RoundRect(310, 4, 7, 8, 1, fill=VIOLET, outline=None, stroke=0)
-image_group.append(clock_tick_mask)
+# Define the clock tick (watchdog) indicator
+clock_watch = Label(MEDIUM_FONT, text="  ")
+clock_watch.anchor_point = (0, 0)
+clock_watch.anchored_position = (display.width - 7, -2)
+clock_watch.background_color = VIOLET
+image_group.append(clock_watch)
 
 gc.collect()  # Clean up displayio rendering rubbish
 
