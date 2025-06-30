@@ -34,6 +34,7 @@ from wmo_to_map_icon import wmo_to_map_icon
 from om_query import DATA_SOURCE
 
 # Weather Display Parameters
+CITY = os.getenv("LOCATION")
 SAMPLE_INTERVAL = 600  # Check conditions (sec): typically 600 to 1200
 NTP_INTERVAL = 3600  # Update local time from NTP server (sec): typically 3600
 BRIGHTNESS = 0.95  # TFT and NeoPixel brightness setting
@@ -433,6 +434,7 @@ last_time_update = time.monotonic()
 
 # Initially display the conditions
 update_display()  # Fetch initial data from Open-Mateo
+alert(CITY)
 
 # ### Main Loop ###
 while True:
@@ -443,6 +445,7 @@ while True:
         update_display()
         display_local_time()
         last_weather_update = current_time
+        alert(CITY)
 
     # Update network time every NTP_INTERVAL seconds
     if current_time - last_time_update > NTP_INTERVAL:
